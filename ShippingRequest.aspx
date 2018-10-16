@@ -454,7 +454,7 @@
             <td><asp:TextBox ID="txtID" runat="server" Visible="false"></asp:TextBox></td>
         </tr>
     </table>		
-    </asp:panel>
+        </asp:panel>
     <asp:panel id="Panel5" runat="server" groupingtext="Boxes To Ship">
         <asp:Label ID="Label14" runat="server" Text="Note: If more than one box shipping to one address do you prefer separate AWB #’s or one AWB for all boxes?"></asp:Label>
         <asp:DropDownList class="form-control" ID="ddlNumberItemsShipped" runat="server" AutoPostBack="True" onselectedindexchanged="ddlNumberItemsShipped_SelectedIndexChanged">

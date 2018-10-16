@@ -6,6 +6,10 @@
 <head runat="server">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>-->
+    <!--<link href="~/Styles/Site.css" rel="stylesheet" type="text/css" />original css link-->
+    <!--This page was refactored to a modernized layout that may display for mobile devices by Dan Engle 10/5/2018 but 
+        the tags with "asp" attribute were left-over from exisitng code-->
     <title>Shipping Request Submitted</title>
     <link href="Content/bootstrap.css" rel="stylesheet" />
 </head>
@@ -61,9 +65,14 @@
 
             <asp:Label ID="Label1" runat="server" Text="Manager's Signature________________________________________________________________________________" Font-Bold="true"></asp:Label><br />
 
-            <asp:Label ID="Label2" runat="server" Text="Note: Package will NOT ship without signature of immediate manager."></asp:Label><br /><br />
-
+            <asp:Label ID="Label2" runat="server" Text="Note: Package will NOT ship without signature of immediate manager."></asp:Label><br />
+        <br />
+        <div class="btn-group" role="group">
+            <asp:Button class="btn btn-success" ID="btnEmail" runat="server" onclick="btnEmail_Click" Text="Send to Manager"  />
+        </div>
+        <br />
             <asp:hyperlink ID="Hyperlink1" runat="server" NavigateUrl="~/ShippingRequest.aspx">Return to Shipping Request page</asp:hyperlink>
+        <br />
         </form>
     </div>
 </body>

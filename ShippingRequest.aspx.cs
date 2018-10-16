@@ -15,12 +15,12 @@ using System.DirectoryServices;
 
 public partial class ShippingRequest : Page
 {
-//>===============================================> Dan Engle 10/8/2018 >======================================================================>
+    //>===============================================> Dan Engle 10/8/2018 >======================================================================>
 
+    SqlConnection myConnection;//may need to encapsulate this
     string path = "LDAP://oai.local/OU=Users,OU=OAI Company,dc=oai,dc=local";
     string username = "sa-spcrewnet";
-    string password = "!pwd$cn3t";
-
+    string password = "!pwd$cn3t";  
     public string GetUsersManager(string samaccount)
     {
         System.Diagnostics.Debug.WriteLine("***** Successfully called the GetUsrMgr func and param val is: " + samaccount + "*****");
@@ -65,7 +65,7 @@ public partial class ShippingRequest : Page
         catch { }
         return ManagerData;
     }
-//<==================================================< Dan Engle 10/9/2018 <=======================================================<
+//<==================================================< Dan Engle 10/9/2018 <===================================================================<
 
     #region " Page Load "
 
@@ -232,7 +232,8 @@ public partial class ShippingRequest : Page
             //CCALK 6/12/2012 Pull departments from DB
             DataTable shippingDept = new DataTable();
             //Set up connection string & SqlConnection instance
-            SqlConnection myConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["OAI_ShippingRequest"].ConnectionString);
+            //SqlConnection myConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["OAI_ShippingRequest"].ConnectionString);//Commented out by Dan Engle 10/16/2018
+            using(myConnection = new SqlConnection (ConfigurationManager.ConnectionStrings["OAI_ShippingRequest"].ConnectionString))//Added by Dan to replace above connection
             {
                 try
                 {
@@ -257,7 +258,8 @@ public partial class ShippingRequest : Page
             //CCALK 6/12/2012 Pull departments from DB
             DataTable shippingDept = new DataTable();
             //Set up connection string & SqlConnection instance
-            SqlConnection myConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["OAI_ShippingRequest"].ConnectionString);
+            //SqlConnection myConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["OAI_ShippingRequest"].ConnectionString);//Removed by Dan Engle 10/16/2018
+            using (myConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["OAI_ShippingRequest"].ConnectionString))//Added by Dan to replace above connection
             {
                 try
                 {
@@ -282,7 +284,8 @@ public partial class ShippingRequest : Page
             //CCALK 6/12/2012 Pull departments from DB
             DataTable shippingDept = new DataTable();
             //Set up connection string & SqlConnection instance
-            SqlConnection myConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["OAI_ShippingRequest"].ConnectionString);
+            //SqlConnection myConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["OAI_ShippingRequest"].ConnectionString);//Removed by Dan Engle 10/16/2018
+            using (myConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["OAI_ShippingRequest"].ConnectionString))//Added by Dan to replace above connection
             {
                 try
                 {
@@ -449,7 +452,7 @@ public partial class ShippingRequest : Page
             cmd.ExecuteNonQuery();
         }
         //END Insert user information
-        myConnection.Close();
+        myConnection.Close();//Left in place due to this connection being closed=>Dan Engle 10/16/2018
         //CCALK Create and display text file
         //CreateTextFile(id);
         Server.Transfer("Completed.aspx");
@@ -700,7 +703,8 @@ public partial class ShippingRequest : Page
     {
         DataTable shippingDept = new DataTable();
 
-        SqlConnection myConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["OAI_ShippingRequest"].ConnectionString);
+        //SqlConnection myConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["OAI_ShippingRequest"].ConnectionString);//Removed by Dan Engle 10/16/2018
+        using (myConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["OAI_ShippingRequest"].ConnectionString))//Added by Dan to replace above connection
         {
             try
             {
@@ -727,8 +731,8 @@ public partial class ShippingRequest : Page
     //CCALK If user information (name, phone, email) exists for the user populate those fields
     private void GetUserInformation()
     {
-        SqlConnection myConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["OAI_ShippingRequest"].ConnectionString);
-
+        //SqlConnection myConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["OAI_ShippingRequest"].ConnectionString);//Removed by Dan Engle 10/16/2018
+        using (myConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["OAI_ShippingRequest"].ConnectionString))//Added by Dan to replace above connection
         try
         {
             //CCALK 6/15/2012 Get the user info from DB
@@ -756,6 +760,8 @@ public partial class ShippingRequest : Page
             }
 
             reader.Close();
+
+            myConnection.Close();
         }
 
         catch (Exception ex)
@@ -1583,6 +1589,8 @@ public partial class ShippingRequest : Page
 
             ClearShippingFields();
 
+            myConnection.Close();
+
         }
         catch (FormatException ex)
         {
@@ -1609,7 +1617,7 @@ public partial class ShippingRequest : Page
         //CCALK 6/18/2012 Update client address
         SqlConnection myConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["OAI_ShippingRequest"].ConnectionString);
 
-        myConnection.Open();
+        myConnection.Open();//Connection closes 25 lines below
 
         SqlCommand cmd = new SqlCommand();
 
@@ -1634,7 +1642,7 @@ public partial class ShippingRequest : Page
 
             cmd.ExecuteNonQuery();
 
-            myConnection.Close();
+            myConnection.Close();//Verified connection closes from 25 lines above
 
             GetShippingAddresses();
 
@@ -1665,6 +1673,8 @@ public partial class ShippingRequest : Page
 
         SqlConnection myConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["OAI_ShippingRequest"].ConnectionString);
 
+        myConnection.Open();
+
         SqlCommand myCommand = new SqlCommand("uspSelectClientAdresses", myConnection);
 
         myCommand.CommandType = CommandType.StoredProcedure;
@@ -1679,7 +1689,7 @@ public partial class ShippingRequest : Page
         gvClientAddresses.DataSource = myDataSet;
         gvClientAddresses.DataBind();
 
-        myConnection.Close();
+        myConnection.Close();//Verified closed SQL connection 
     }
     // **********************************************   END Search Process   *********************************************************
 
